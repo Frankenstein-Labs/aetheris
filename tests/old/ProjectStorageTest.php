@@ -20,7 +20,6 @@ class ProjectStorafeTest extends BaseProjects
         $file = $this->client->call(Client::METHOD_POST, '/storage/files', [
             'content-type' => 'multipart/form-data',
             'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
         ], [
             'files' => new CURLFile(realpath(__DIR__ . '/../resources/logo.png'), 'image/png', 'logo.png'),
             'read' => ['*'],
@@ -50,10 +49,10 @@ class ProjectStorafeTest extends BaseProjects
      */
     public function testFileReadSuccess(array $data): array
     {
-        $file1 = $this->client->call(Client::METHOD_GET, '/storage/files/' . $data['fileId'], [
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
-        ]);
+        $file1 = $this->client->call(Client::METHOD_GET, '/storage/files/' . $data['fileId'], array_merge([
+            'content-type' => 'application/json',
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()));
 
         $this->assertEquals($file1['headers']['status-code'], 200);
         $this->assertNotEmpty($file1['body']['$uid']);
@@ -72,29 +71,29 @@ class ProjectStorafeTest extends BaseProjects
         $this->assertCount(1, $file1['body']['$permissions']['read']);
         $this->assertCount(1, $file1['body']['$permissions']['write']);
 
-        $file2 = $this->client->call(Client::METHOD_GET, '/storage/files/' . $data['fileId'] . '/preview', [
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
-        ]);
+        $file2 = $this->client->call(Client::METHOD_GET, '/storage/files/' . $data['fileId'] . '/preview', array_merge([
+            'content-type' => 'application/json',
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()));
 
         $this->assertEquals(200, $file2['headers']['status-code']);
         $this->assertEquals('image/png; charset=UTF-8', $file2['headers']['content-type']);
         $this->assertNotEmpty($file2['body']);
 
-        $file3 = $this->client->call(Client::METHOD_GET, '/storage/files/' . $data['fileId'] . '/download', [
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
-        ]);
+        $file3 = $this->client->call(Client::METHOD_GET, '/storage/files/' . $data['fileId'] . '/download', array_merge([
+            'content-type' => 'application/json',
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()));
 
         $this->assertEquals(200, $file3['headers']['status-code']);
         $this->assertEquals('attachment; filename="logo.png"', $file3['headers']['content-disposition']);
         $this->assertEquals('image/png; charset=UTF-8', $file3['headers']['content-type']);
         $this->assertNotEmpty($file3['body']);
 
-        $file4 = $this->client->call(Client::METHOD_GET, '/storage/files/' . $data['fileId'] . '/view', [
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
-        ]);
+        $file4 = $this->client->call(Client::METHOD_GET, '/storage/files/' . $data['fileId'] . '/view', array_merge([
+            'content-type' => 'application/json',
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()));
 
         $this->assertEquals(200, $file4['headers']['status-code']);
         $this->assertEquals('image/png; charset=UTF-8', $file4['headers']['content-type']);
@@ -108,10 +107,10 @@ class ProjectStorafeTest extends BaseProjects
      */
     public function testFileListSuccess(array $data): array
     {
-        $files = $this->client->call(Client::METHOD_GET, '/storage/files', [
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
-        ]);
+        $files = $this->client->call(Client::METHOD_GET, '/storage/files', array_merge([
+            'content-type' => 'application/json',
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()));
 
         $this->assertEquals(200, $files['headers']['status-code']);
         $this->assertEquals(1, $files['body']['sum']);
@@ -125,10 +124,10 @@ class ProjectStorafeTest extends BaseProjects
      */
     public function testFileUpdateSuccess(array $data): array
     {
-        $file = $this->client->call(Client::METHOD_PUT, '/storage/files/' . $data['fileId'], [
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
-        ], [
+        $file = $this->client->call(Client::METHOD_PUT, '/storage/files/' . $data['fileId'], array_merge([
+            'content-type' => 'application/json',
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()), [
             'read' => ['*'],
             'write' => ['*'],
         ]);
@@ -158,10 +157,10 @@ class ProjectStorafeTest extends BaseProjects
      */
     public function testFileDeleteSuccess(array $data): array
     {
-        $file = $this->client->call(Client::METHOD_DELETE, '/storage/files/' . $data['fileId'], [
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
-        ]);
+        $file = $this->client->call(Client::METHOD_DELETE, '/storage/files/' . $data['fileId'], array_merge([
+            'content-type' => 'application/json',
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()));
 
         $this->assertEquals(204, $file['headers']['status-code']);
         $this->assertEmpty($file['body']);
