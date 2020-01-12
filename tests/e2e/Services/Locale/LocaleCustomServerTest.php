@@ -12,6 +12,4 @@ class LocaleCustomServerTest extends Scope
     use LocaleBase;
     use ProjectCustom;
     use SideServer;
-
-    ///$this->getHeaders()
 }

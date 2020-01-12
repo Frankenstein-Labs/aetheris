@@ -8,10 +8,10 @@ class ConsoleHealthTest extends BaseConsole
 {
     public function testHTTPSuccess(): void
     {
-        $response = $this->client->call(Client::METHOD_GET, '/health', [
-            'origin' => 'http://localhost',
+        $response = $this->client->call(Client::METHOD_GET, '/health', array_merge([
             'content-type' => 'application/json',
-        ], []);
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()), []);
 
         $this->assertEquals(200, $response['headers']['status-code']);
         $this->assertEquals('OK', $response['body']['status']);
@@ -19,10 +19,10 @@ class ConsoleHealthTest extends BaseConsole
 
     public function testDBSuccess(): void
     {
-        $response = $this->client->call(Client::METHOD_GET, '/health/db', [
-            'origin' => 'http://localhost',
+        $response = $this->client->call(Client::METHOD_GET, '/health/db', array_merge([
             'content-type' => 'application/json',
-        ], []);
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()), []);
 
         $this->assertEquals(200, $response['headers']['status-code']);
         $this->assertEquals('OK', $response['body']['status']);
@@ -30,10 +30,10 @@ class ConsoleHealthTest extends BaseConsole
 
     public function testCacheSuccess(): void
     {
-        $response = $this->client->call(Client::METHOD_GET, '/health/db', [
-            'origin' => 'http://localhost',
+        $response = $this->client->call(Client::METHOD_GET, '/health/db', array_merge([
             'content-type' => 'application/json',
-        ], []);
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()), []);
 
         $this->assertEquals(200, $response['headers']['status-code']);
         $this->assertEquals('OK', $response['body']['status']);
@@ -41,10 +41,10 @@ class ConsoleHealthTest extends BaseConsole
 
     public function testTimeSuccess(): void
     {
-        $response = $this->client->call(Client::METHOD_GET, '/health/time', [
-            'origin' => 'http://localhost',
+        $response = $this->client->call(Client::METHOD_GET, '/health/time', array_merge([
             'content-type' => 'application/json',
-        ], []);
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()), []);
 
         $this->assertEquals(200, $response['headers']['status-code']);
         $this->assertIsInt($response['body']['remote']);
@@ -56,10 +56,10 @@ class ConsoleHealthTest extends BaseConsole
 
     public function testWebhooksSuccess(): void
     {
-        $response = $this->client->call(Client::METHOD_GET, '/health/webhooks', [
-            'origin' => 'http://localhost',
+        $response = $this->client->call(Client::METHOD_GET, '/health/webhooks', array_merge([
             'content-type' => 'application/json',
-        ], []);
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()), []);
 
         $this->assertEquals(200, $response['headers']['status-code']);
         $this->assertIsInt($response['body']['size']);
@@ -68,10 +68,10 @@ class ConsoleHealthTest extends BaseConsole
 
     public function xtestStorageLocalSuccess(): void
     {
-        $response = $this->client->call(Client::METHOD_GET, '/health/storage/local', [
-            'origin' => 'http://localhost',
+        $response = $this->client->call(Client::METHOD_GET, '/health/storage/local', array_merge([
             'content-type' => 'application/json',
-        ], []);
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()), []);
 
         $this->assertEquals(200, $response['headers']['status-code']);
         $this->assertEquals('OK', $response['body']['status']);
@@ -79,10 +79,10 @@ class ConsoleHealthTest extends BaseConsole
 
     public function testStorageAntiVirusSuccess(): void
     {
-        $response = $this->client->call(Client::METHOD_GET, '/health/storage/anti-virus', [
-            'origin' => 'http://localhost',
+        $response = $this->client->call(Client::METHOD_GET, '/health/storage/anti-virus', array_merge([
             'content-type' => 'application/json',
-        ], []);
+            'x-appwrite-project' => $this->getProject()['$uid'],
+        ], $this->getHeaders()), []);
 
         $this->assertEquals(200, $response['headers']['status-code']);
         $this->assertEquals('online', $response['body']['status']);
