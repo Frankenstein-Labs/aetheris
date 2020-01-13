@@ -18,8 +18,7 @@ class ProjectDatabaseTest extends BaseProjects
     {
         $actors = $this->client->call(Client::METHOD_POST, '/database', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'name' => 'Actors',
             'read' => ['*'],
@@ -55,8 +54,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $movies = $this->client->call(Client::METHOD_POST, '/database', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'name' => 'Movies',
             'read' => ['*'],
@@ -109,8 +107,7 @@ class ProjectDatabaseTest extends BaseProjects
     {
         $document1 = $this->client->call(Client::METHOD_POST, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'data' => [
                 'name' => 'Captain America',
@@ -134,8 +131,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $document2 = $this->client->call(Client::METHOD_POST, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'data' => [
                 'name' => 'Spider-Man: Far From Home',
@@ -165,8 +161,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $document3 = $this->client->call(Client::METHOD_POST, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'data' => [
                 'name' => 'Spider-Man: Homecoming',
@@ -190,8 +185,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $document4 = $this->client->call(Client::METHOD_POST, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'data' => [
                 'releaseYear' => 2020, // Missing title, expect an 400 error
@@ -253,8 +247,7 @@ class ProjectDatabaseTest extends BaseProjects
     {
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'order-field' => 'releaseYear',
             'order-type' => 'ASC',
@@ -268,8 +261,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'order-field' => 'releaseYear',
             'order-type' => 'DESC',
@@ -289,8 +281,7 @@ class ProjectDatabaseTest extends BaseProjects
     {
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'limit' => 1,
             'order-field' => 'releaseYear',
@@ -303,8 +294,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'limit' => 2,
             'offset' => 1,
@@ -325,8 +315,7 @@ class ProjectDatabaseTest extends BaseProjects
     {
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'limit' => 1,
             'order-field' => 'releaseYear',
@@ -339,8 +328,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'limit' => 2,
             'offset' => 1,
@@ -360,8 +348,7 @@ class ProjectDatabaseTest extends BaseProjects
     {
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'search' => 'Captain America',
         ]);
@@ -371,8 +358,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'search' => 'Homecoming',
         ]);
@@ -382,8 +368,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'search' => 'spider',
         ]);
@@ -400,8 +385,7 @@ class ProjectDatabaseTest extends BaseProjects
     {
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'filters' => [
                 'actors.firstName=Tom'
@@ -414,8 +398,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'filters' => [
                 'releaseYear=1944'
@@ -427,8 +410,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $documents = $this->client->call(Client::METHOD_GET, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'filters' => [
                 'releaseYear!=1944'
@@ -447,8 +429,7 @@ class ProjectDatabaseTest extends BaseProjects
     {
         $document = $this->client->call(Client::METHOD_POST, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'data' => [
                 'name' => 'Thor: Ragnaroc',
@@ -465,8 +446,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $document = $this->client->call(Client::METHOD_PATCH, '/database/' . $collection . '/documents/' . $id, [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'data' => [
                 'name' => 'Thor: Ragnarok'
@@ -479,8 +459,7 @@ class ProjectDatabaseTest extends BaseProjects
 
         $document = $this->client->call(Client::METHOD_GET, '/database/' . $collection . '/documents/' . $id, [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ]);
 
         $id = $document['body']['$uid'];
@@ -499,8 +478,7 @@ class ProjectDatabaseTest extends BaseProjects
     {
         $document = $this->client->call(Client::METHOD_POST, '/database/' . $data['moviesId'] . '/documents', [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ], [
             'data' => [
                 'name' => 'Thor: Ragnarok',
@@ -515,24 +493,21 @@ class ProjectDatabaseTest extends BaseProjects
 
         $document = $this->client->call(Client::METHOD_GET, '/database/' . $collection . '/documents/' . $id, [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ]);
 
         $this->assertEquals($document['headers']['status-code'], 200);
 
         $document = $this->client->call(Client::METHOD_DELETE, '/database/' . $collection . '/documents/' . $id, [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ]);
 
         $this->assertEquals($document['headers']['status-code'], 204);
 
         $document = $this->client->call(Client::METHOD_GET, '/database/' . $collection . '/documents/' . $id, [
             'content-type' => 'application/json',
-            'x-appwrite-project' => $data['projectUid'],
-            'x-appwrite-key' => $data['projectAPIKeySecret'],
+            'x-appwrite-project' => $this->getProject()['$uid'],
         ]);
 
         $this->assertEquals($document['headers']['status-code'], 404);
