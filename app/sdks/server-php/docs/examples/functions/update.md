@@ -12,4 +12,4 @@ $client
 
 $functions = new Functions($client);
 
-$result = $functions->update('[FUNCTION_ID]', '[NAME]', [], 'event', [], '', 1);
+$result = $functions->update('[FUNCTION_ID]', '[NAME]');
