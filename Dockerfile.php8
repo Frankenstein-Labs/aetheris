@@ -38,7 +38,7 @@ RUN \
   ## Swoole Extension
   git clone https://github.com/swoole/swoole-src.git && \
   cd swoole-src && \
-  git checkout v$PHP_SWOOLE_VERSION && \
+  #git checkout v$PHP_SWOOLE_VERSION && \
   phpize && \
   ./configure --enable-sockets --enable-http2 && \
   make && make install && \
@@ -103,9 +103,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN \
   apt-get update && \
   apt-get install -y --no-install-recommends --no-install-suggests webp certbot htop procps \
-  libonig-dev libcurl4-gnutls-dev libmagickwand-dev libyaml-dev libbrotli-dev libz-dev && \
-  pecl install imagick yaml && \ 
-  docker-php-ext-enable imagick yaml
+  libonig-dev libcurl4-gnutls-dev libmagickwand-dev libyaml-dev libbrotli-dev libz-dev
+  # pecl install imagick yaml && \ 
+  # docker-php-ext-enable imagick yaml
 
 RUN docker-php-ext-install sockets curl opcache pdo pdo_mysql
 
