@@ -1,6 +1,6 @@
 ## 0.2.3
 
-- Added support for custom OAuth2 scopes
+- Fixed OAuth2 cookie bug, where a new session cookie couldn't overwrite an old cookie
 
 ## 0.2.2
 
