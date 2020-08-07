@@ -26,7 +26,7 @@ class MembershipList extends BaseList
      */
     public function getName():string
     {
-        return 'Membership List';
+        return 'Memberships List';
     }
 
     /**
