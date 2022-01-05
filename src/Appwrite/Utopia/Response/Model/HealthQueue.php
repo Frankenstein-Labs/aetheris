@@ -5,17 +5,16 @@ namespace Appwrite\Utopia\Response\Model;
 use Appwrite\Utopia\Response;
 use Appwrite\Utopia\Response\Model;
 
-class FuncPermissions extends Model
+class HealthQueue extends Model
 {
     public function __construct()
     {
         $this
-            ->addRule('execute', [
-                'type' => self::TYPE_STRING,
-                'description' => 'Execution permissions.',
-                'default' => [],
-                'example' => 'user:5e5ea5c16897e',
-                'array' => true,
+            ->addRule('size', [
+                'type' => self::TYPE_INTEGER,
+                'description' => 'Amount of actions in the queue.',
+                'default' => 0,
+                'example' => 8,
             ])
         ;
     }
@@ -27,16 +26,16 @@ class FuncPermissions extends Model
      */
     public function getName():string
     {
-        return 'FuncPermissions';
+        return 'Health Queue';
     }
 
     /**
-     * Get Collection
+     * Get Type
      *
      * @return string
      */
     public function getType():string
     {
-        return Response::MODEL_FUNC_PERMISSIONS;
+        return Response::MODEL_HEALTH_QUEUE;
     }
 }
