@@ -28,17 +28,52 @@ class Tag extends Model
                 'default' => 0,
                 'example' => 1592981250,
             ])
-            ->addRule('command', [
+            ->addRule('entrypoint', [
                 'type' => self::TYPE_STRING,
-                'description' => 'The entrypoint command in use to execute the tag code.',
+                'description' => 'The entrypoint file to use to execute the tag code.',
                 'default' => '',
                 'example' => 'enabled',
             ])
             ->addRule('size', [
-                'type' => self::TYPE_STRING,
+                'type' => self::TYPE_INTEGER,
                 'description' => 'The code size in bytes.',
+                'default' => 0,
+                'example' => 128,
+            ])
+            // Build Status
+            // Failed - The tag build has failed. More details can usually be found in buildStderr
+            // Ready - The tag build was successful and the tag is ready to be deployed
+            // Processing - The tag is currently waiting to have a build triggered
+            // Building - The tag is currently being built
+            ->addRule('status', [
+                'type' => self::TYPE_STRING,
+                'description' => 'The tags current built status',
                 'default' => '',
-                'example' => 'python-3.8',
+                'example' => 'ready',
+            ])
+            ->addRule('buildId', [
+                'type' => self::TYPE_STRING,
+                'description' => 'The current build ID.',
+                'default' => '',
+                'example' => '5e5ea5c16897e',
+            ])
+            ->addRule('buildStdout', [
+                'type' => self::TYPE_STRING,
+                'description' => 'The stdout of the build.',
+                'default' => '',
+                'example' => '',
+            ])
+            ->addRule('buildStderr', [
+                'type' => self::TYPE_STRING,
+                'description' => 'The stderr of the build.',
+                'default' => '',
+                'example' => '',
+            ])
+            ->addRule('automaticDeploy', [
+                'type' => self::TYPE_BOOLEAN,
+                'description' => 'Whether the tag should be automatically deployed.',
+                'default' => false,
+                'example' => true,
             ])
         ;
     }
