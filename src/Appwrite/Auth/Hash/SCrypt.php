@@ -34,7 +34,7 @@ class SCrypt extends Hash
      * @return boolean true if password matches hash
      */
     public function verify(string $password, string $hash): bool {
-        return $hash === $this->hash($password);
+        return $this->hash($password) === $hash;
     }
 
     /**
