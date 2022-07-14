@@ -74,7 +74,7 @@ class VideoRendition extends Model
      */
     public function getName(): string
     {
-        return 'File rendition';
+        return 'Video rendition';
     }
 
     /**
