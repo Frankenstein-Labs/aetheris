@@ -209,6 +209,4 @@ class Etsy extends OAuth2
 
         return $this->user;
     }
-
-    
 }
