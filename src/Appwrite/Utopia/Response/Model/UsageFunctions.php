@@ -37,6 +37,20 @@ class UsageFunctions extends Model
                 'example' => new \stdClass(),
                 'array' => true
             ])
+            ->addRule('functionsExecutionTime', [
+                'type' => Response::MODEL_METRIC_LIST,
+                'description' => 'Aggregated stats for function execution duration.',
+                'default' => [],
+                'example' => new \stdClass(),
+                'array' => true
+            ])
+            ->addRule('functionsBuildTime', [
+                'type' => Response::MODEL_METRIC_LIST,
+                'description' => 'Aggregated stats for function execution duration.',
+                'default' => [],
+                'example' => new \stdClass(),
+                'array' => true
+            ])
         ;
     }
 
