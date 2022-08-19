@@ -5,12 +5,13 @@ namespace Tests\Unit\Utopia\Database\Validator\Queries;
 use Appwrite\Utopia\Database\Validator\Queries;
 use Appwrite\Utopia\Database\Validator\Queries\LimitOffsetQuery;
 use Utopia\Database\Query;
+use Utopia\Validator;
 use PHPUnit\Framework\TestCase;
 
 class LimitOffsetQueryTest extends TestCase
 {
     /**
-     * @var Key
+     * @var Validator
      */
     protected $validator = null;
 
@@ -38,13 +39,18 @@ class LimitOffsetQueryTest extends TestCase
         $this->assertEquals($this->validator->isValid(Query::limit(101)), false, $this->validator->getDescription());
         $this->assertEquals($this->validator->isValid(Query::offset(-1)), false, $this->validator->getDescription());
         $this->assertEquals($this->validator->isValid(Query::offset(5001)), false, $this->validator->getDescription());
+        $this->assertEquals($this->validator->isValid(new Query(Query::TYPE_CURSORAFTER, values: ['asdf'])), false, $this->validator->getDescription());
+        $this->assertEquals($this->validator->isValid(new Query(Query::TYPE_CURSORBEFORE, values: ['asdf'])), false, $this->validator->getDescription());
+        $this->assertEquals($this->validator->isValid(Query::equal('attr', ['v'])), false, $this->validator->getDescription());
+        $this->assertEquals($this->validator->isValid(Query::orderAsc('attr')), false, $this->validator->getDescription());
+        $this->assertEquals($this->validator->isValid(Query::orderDesc('attr')), false, $this->validator->getDescription());
     }
 
     public function testValues(): void
     {
 
-        $validator = new Queries($this->validator, strict: false);
-    
+        $validator = new Queries($this->validator);
+
         // Test for Success
         $this->assertEquals($validator->isValid(['limit(1)']), true, $validator->getDescription());
         $this->assertEquals($validator->isValid(['limit(0)']), true, $validator->getDescription());
@@ -59,5 +65,10 @@ class LimitOffsetQueryTest extends TestCase
         $this->assertEquals($validator->isValid(['limit(101)']), false, $validator->getDescription());
         $this->assertEquals($validator->isValid(['offset(-1)']), false, $validator->getDescription());
         $this->assertEquals($validator->isValid(['offset(5001)']), false, $validator->getDescription());
+        $this->assertEquals($validator->isValid(['cursorAfter("asdf")']), false, $validator->getDescription());
+        $this->assertEquals($validator->isValid(['cursorBefore("asdf")']), false, $validator->getDescription());
+        $this->assertEquals($validator->isValid(['equal("attr", "v")']), false, $validator->getDescription());
+        $this->assertEquals($validator->isValid(['orderAsc("attr")']), false, $validator->getDescription());
+        $this->assertEquals($validator->isValid(['orderDesc("attr")']), false, $validator->getDescription());
     }
 }
