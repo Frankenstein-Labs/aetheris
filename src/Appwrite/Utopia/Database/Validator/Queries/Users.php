@@ -2,9 +2,7 @@
 
 namespace Appwrite\Utopia\Database\Validator\Queries;
 
-use Appwrite\Utopia\Database\Validator\Queries\Collection;
-
-class Users extends Collection
+class Users extends Base
 {
     public const ALLOWED_ATTRIBUTES = [
         'name',
@@ -14,8 +12,7 @@ class Users extends Collection
         'passwordUpdate',
         'registration',
         'emailVerification',
-        'phoneVerification',
-        'search',
+        'phoneVerification'
     ];
 
     /**
