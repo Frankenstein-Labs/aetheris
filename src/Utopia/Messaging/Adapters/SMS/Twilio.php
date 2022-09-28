@@ -26,6 +26,10 @@ class Twilio extends Base
         return 1;
     }
 
+    /**
+     * @inheritdoc
+     * @throws \Exception
+     */
     protected function sendMessage(SMS $message): string
     {
         return $this->request(
