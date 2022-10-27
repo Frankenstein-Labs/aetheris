@@ -10,9 +10,8 @@ class Random extends Algorithm
     /**
      * @param Option[] $options
      */
-    public function run(array $options): Option
+    public function run(array $options): ?Option
     {
-        // TODO: Pick random (from $options)
-        return $options[0];
+        return $options[\array_rand($options)] ?? null;
     }
 }
