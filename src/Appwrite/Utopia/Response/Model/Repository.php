@@ -11,8 +11,8 @@ class Repository extends Model
     {
         $this
             ->addRule('id', [
-                'type' => self::TYPE_INTEGER,
-                'description' => 'Repository ID.',
+                'type' => self::TYPE_STRING,
+                'description' => 'Git Repository ID.',
                 'default' => '',
                 'example' => '5e5ea5c16897e',
             ])
@@ -21,12 +21,6 @@ class Repository extends Model
                 'description' => 'Repository Name.',
                 'default' => '',
                 'example' => 'appwrite',
-            ])
-            ->addRule('owner', [
-                'type' => self::TYPE_JSON,
-                'description' => 'Repository Owner.',
-                'default' => '',
-                'example' => '{"login": "Example Owner"}',
             ]);
     }
 
