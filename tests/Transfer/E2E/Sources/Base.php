@@ -3,11 +3,11 @@
 namespace Utopia\Tests\E2E\Sources;
 
 use PHPUnit\Framework\TestCase;
+use Utopia\Migration\Destination;
+use Utopia\Migration\Resource;
+use Utopia\Migration\Source;
+use Utopia\Migration\Transfer;
 use Utopia\Tests\E2E\Adapters\Mock;
-use Utopia\Transfer\Destination;
-use Utopia\Transfer\Resource;
-use Utopia\Transfer\Source;
-use Utopia\Transfer\Transfer;
 
 abstract class Base extends TestCase
 {
@@ -43,7 +43,7 @@ abstract class Base extends TestCase
 
     public function testCache(): void
     {
-        $cache = $this->createMock(\Utopia\Transfer\Cache::class);
+        $cache = $this->createMock(\Utopia\Migration\Cache::class);
         $this->source->registerCache($cache);
 
         $this->assertNotNull($this->source->cache);
