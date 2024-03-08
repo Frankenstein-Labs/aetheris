@@ -272,11 +272,15 @@ class Appwrite extends Source
      */
     protected function exportGroupAuth(int $batchSize, array $resources)
     {
+
         if (in_array(Resource::TYPE_USER, $resources)) {
+
             $this->exportUsers($batchSize);
+
         }
 
         if (in_array(Resource::TYPE_TEAM, $resources)) {
+
             $this->exportTeams($batchSize);
         }
 
@@ -680,6 +684,7 @@ class Appwrite extends Source
 
     private function exportDatabases(int $batchSize)
     {
+
         $databaseClient = new Databases($this->client);
 
         $lastDatabase = null;
