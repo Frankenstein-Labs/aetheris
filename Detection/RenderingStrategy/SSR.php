@@ -8,6 +8,6 @@ class SSR extends RenderingStrategyDetection
 {
     public function getName(): string
     {
-        return 'SSR';
+        return 'ssr';
     }
 }
