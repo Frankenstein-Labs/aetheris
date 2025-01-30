@@ -16,8 +16,8 @@ class StatsUsage extends Event
         parent::__construct($connection);
 
         $this
-            ->setQueue(Event::USAGE_QUEUE_NAME)
-            ->setClass(Event::USAGE_CLASS_NAME);
+            ->setQueue(Event::STATS_USAGE_QUEUE_NAME)
+            ->setClass(Event::STATS_USAGE_CLASS_NAME);
     }
 
     /**
