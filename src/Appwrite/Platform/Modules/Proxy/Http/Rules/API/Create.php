@@ -119,9 +119,8 @@ class Create extends Action
             'projectInternalId' => $project->getInternalId(),
             'domain' => $domain->get(),
             'status' => $status,
-            'resourceType' => 'api',
-            'resourceId' => '',
-            'resourceInternalId' => '',
+            'type' => 'api',
+            'value' => '',
             'certificateId' => '',
         ]);
 
