@@ -85,13 +85,12 @@ class Deepseek extends Adapter
 
         $formattedMessages = [];
         foreach ($messages as $message) {
-            if (! isset($message['role']) || ! isset($message['content'])) {
-                throw new \Exception('Invalid message format');
+            if (! empty($message->getRole()) && ! empty($message->getContent())) {
+                $formattedMessages[] = [
+                    'role' => $message->getRole(),
+                    'content' => $message->getContent(),
+                ];
             }
-            $formattedMessages[] = [
-                'role' => $message->getRole(),
-                'content' => $message->getContent(),
-            ];
         }
 
         $instructions = [];
