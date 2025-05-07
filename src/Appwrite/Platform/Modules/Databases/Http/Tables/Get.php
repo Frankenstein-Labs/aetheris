@@ -2,20 +2,19 @@
 
 namespace Appwrite\Platform\Modules\Databases\Http\Tables;
 
-use Appwrite\Extend\Exception;
+use Appwrite\Platform\Modules\Databases\Http\Collections\Action;
+use Appwrite\Platform\Modules\Databases\Http\Collections\Get as CollectionGet;
 use Appwrite\SDK\AuthType;
 use Appwrite\SDK\ContentType;
 use Appwrite\SDK\Method;
 use Appwrite\SDK\Response as SDKResponse;
 use Appwrite\Utopia\Response as UtopiaResponse;
 use Utopia\Database\Database;
-use Utopia\Database\Validator\Authorization;
 use Utopia\Database\Validator\UID;
-use Utopia\Platform\Action;
 use Utopia\Platform\Scope\HTTP;
 use Utopia\Swoole\Response as SwooleResponse;
 
-class Get extends Action
+class Get extends CollectionGet
 {
     use HTTP;
 
@@ -24,26 +23,32 @@ class Get extends Action
         return 'getTable';
     }
 
+    protected function getResponseModel(): string
+    {
+        return UtopiaResponse::MODEL_TABLE;
+    }
+
     public function __construct()
     {
+        $this->setContext(Action::TABLE);
+
         $this
             ->setHttpMethod(self::HTTP_REQUEST_METHOD_GET)
             ->setHttpPath('/v1/databases/:databaseId/tables/:tableId')
-            ->httpAlias('/v1/databases/:databaseId/collections/:tableId')
             ->desc('Get table')
             ->groups(['api', 'database'])
             ->label('scope', 'collections.read')
             ->label('resourceType', RESOURCE_TYPE_DATABASES)
             ->label('sdk', new Method(
                 namespace: 'databases',
-                group: 'tables',
-                name: 'getTable',
+                group: $this->getSdkGroup(),
+                name: self::getName(),
                 description: '/docs/references/databases/get-collection.md',
                 auth: [AuthType::KEY],
                 responses: [
                     new SDKResponse(
                         code: SwooleResponse::STATUS_CODE_OK,
-                        model: UtopiaResponse::MODEL_TABLE,
+                        model: $this->getResponseModel(),
                     )
                 ],
                 contentType: ContentType::JSON
@@ -52,23 +57,8 @@ class Get extends Action
             ->param('tableId', '', new UID(), 'Table ID.')
             ->inject('response')
             ->inject('dbForProject')
-            ->callback([$this, 'action']);
-    }
-
-    public function action(string $databaseId, string $tableId, UtopiaResponse $response, Database $dbForProject): void
-    {
-        $database = Authorization::skip(fn () => $dbForProject->getDocument('databases', $databaseId));
-
-        if ($database->isEmpty()) {
-            throw new Exception(Exception::DATABASE_NOT_FOUND);
-        }
-
-        $table = $dbForProject->getDocument('database_' . $database->getInternalId(), $tableId);
-
-        if ($table->isEmpty()) {
-            throw new Exception(Exception::TABLE_NOT_FOUND);
-        }
-
-        $response->dynamic($table, UtopiaResponse::MODEL_TABLE);
+            ->callback(function (string $databaseId, string $tableId, UtopiaResponse $response, Database $dbForProject) {
+                parent::action($databaseId, $tableId, $response, $dbForProject);
+            });
     }
 }
