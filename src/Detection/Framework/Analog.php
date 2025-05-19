@@ -16,7 +16,7 @@ class Analog extends Framework
      */
     public function getFiles(): array
     {
-        return ['vite.config.js', 'vite.config.ts', 'angular.json'];
+        return ['angular.json'];
     }
 
     public function getInstallCommand(): string
