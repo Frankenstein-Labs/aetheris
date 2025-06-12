@@ -35,7 +35,7 @@ class Delete extends DocumentsDelete
 
         $this
             ->setHttpMethod(self::HTTP_REQUEST_METHOD_DELETE)
-            ->setHttpPath('/v1/databases/:databaseId/tables/:collectionId/rows')
+            ->setHttpPath('/v1/databases/:databaseId/tables/:tableId/rows')
             ->desc('Delete rows')
             ->groups(['api', 'database'])
             ->label('scope', 'documents.write')
