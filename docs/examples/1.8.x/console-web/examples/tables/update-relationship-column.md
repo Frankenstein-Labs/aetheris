@@ -1,4 +1,4 @@
-import { Client, Tables,  } from "@appwrite.io/console";
+import { Client, Tables, RelationMutate } from "@appwrite.io/console";
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -10,7 +10,7 @@ const result = await tables.updateRelationshipColumn(
     '<DATABASE_ID>', // databaseId
     '<TABLE_ID>', // tableId
     '', // key
-    .Cascade, // onDelete (optional)
+    RelationMutate.Cascade, // onDelete (optional)
     '' // newKey (optional)
 );
 
