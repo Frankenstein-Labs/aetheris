@@ -7,9 +7,9 @@ use Utopia\Emails\Canonicals\Provider;
 /**
  * iCloud
  *
- * Handles Apple iCloud email normalization
- * - TODO: Plus addressing and dots removal commented out until manual confirmation
- * - Preserves dots and hyphens in local part
+ * Handles Apple iCloud email normalization based on validator.js rules
+ * - Removes plus addressing (subaddress)
+ * - Preserves dots in local part
  * - Normalizes to icloud.com domain
  */
 class Icloud extends Provider
@@ -28,17 +28,13 @@ class Icloud extends Provider
         // Convert to lowercase
         $normalizedLocal = $this->toLowerCase($local);
 
-        // TODO: Commented out until manual confirmation of iCloud's plus addressing and dots support
-        // Check if there's plus addressing
-        // $hasPlus = strpos($normalizedLocal, '+') !== false && strpos($normalizedLocal, '+') > 0;
+        // Remove plus addressing (subaddress) - everything after +
+        $normalizedLocal = $this->removePlusAddressing($normalizedLocal);
 
-        // Remove plus addressing (everything after +)
-        // $normalizedLocal = $this->removePlusAddressing($normalizedLocal);
-
-        // Remove dots only if there was plus addressing (iCloud treats dots as aliases only with plus)
-        // if ($hasPlus) {
-        //     $normalizedLocal = $this->removeDots($normalizedLocal);
-        // }
+        // Ensure local part is not empty after normalization
+        if (empty($normalizedLocal)) {
+            throw new \InvalidArgumentException('Email local part cannot be empty after normalization');
+        }
 
         return [
             'local' => $normalizedLocal,
