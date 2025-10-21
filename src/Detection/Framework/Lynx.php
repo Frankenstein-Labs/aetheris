@@ -2,7 +2,7 @@
 
 namespace Utopia\Detector\Detection\Framework;
 
-class Lynx extends JS
+class Lynx extends React
 {
     public function getName(): string
     {
