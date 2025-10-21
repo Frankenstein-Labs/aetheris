@@ -2,9 +2,7 @@
 
 namespace Utopia\Detector\Detection\Framework;
 
-use Utopia\Detector\Detection\Framework;
-
-class NextJs extends Framework
+class NextJs extends React
 {
     public function getName(): string
     {
@@ -14,9 +12,17 @@ class NextJs extends Framework
     /**
      * @return array<string>
      */
+    public function getPackages(): array
+    {
+        return \array_merge(['next'], parent::getPackages());
+    }
+
+    /**
+     * @return array<string>
+     */
     public function getFiles(): array
     {
-        return ['next.config.js', 'next.config.ts', 'next.config.mjs'];
+        return \array_merge(['next.config.js', 'next.config.ts', 'next.config.mjs'], parent::getFiles());
     }
 
     public function getInstallCommand(): string
