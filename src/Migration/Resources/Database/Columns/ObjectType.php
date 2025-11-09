@@ -69,6 +69,6 @@ class ObjectType extends Column
 
     public function getType(): string
     {
-        return Column::TYPE_POINT;
+        return Column::TYPE_OBJECT;
     }
 }
