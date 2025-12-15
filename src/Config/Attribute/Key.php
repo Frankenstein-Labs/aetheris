@@ -11,7 +11,7 @@ class Key
     public function __construct(
         public string $name,
         public Validator $validator,
-        public bool $required,
+        public bool $required = true,
     ) {
     }
 }
