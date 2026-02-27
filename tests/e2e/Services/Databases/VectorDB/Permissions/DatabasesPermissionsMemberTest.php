@@ -2,6 +2,8 @@
 
 namespace Tests\E2E\Services\Databases\VectorDB\Permissions;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\E2E\Client;
 use Tests\E2E\Scopes\ProjectCustom;
 use Tests\E2E\Scopes\Scope;
@@ -26,81 +28,21 @@ class DatabasesPermissionsMemberTest extends Scope
         ];
     }
 
-    public function permissionsProvider(): array
+    public static function permissionsProvider(): array
     {
         return [
-            [
-                'permissions' => [Permission::read(Role::any())],
-                'any' => 1,
-                'users' => 1,
-                'doconly' => 1,
-            ],
-            [
-                'permissions' => [Permission::read(Role::users())],
-                'any' => 2,
-                'users' => 2,
-                'doconly' => 2,
-            ],
-            [
-                'permissions' => [Permission::read(Role::user(ID::custom('random')))],
-                'any' => 3,
-                'users' => 3,
-                'doconly' => 2,
-            ],
-            [
-                'permissions' => [Permission::read(Role::user(ID::custom('lorem'))), Permission::update(Role::user('lorem')), Permission::delete(Role::user('lorem'))],
-                'any' => 4,
-                'users' => 4,
-                'doconly' => 2,
-            ],
-            [
-                'permissions' => [Permission::read(Role::user(ID::custom('dolor'))), Permission::update(Role::user('dolor')), Permission::delete(Role::user('dolor'))],
-                'any' => 5,
-                'users' => 5,
-                'doconly' => 2,
-            ],
-            [
-                'permissions' => [Permission::read(Role::user(ID::custom('dolor'))), Permission::read(Role::user('lorem')), Permission::update(Role::user('dolor')), Permission::delete(Role::user('dolor'))],
-                'any' => 6,
-                'users' => 6,
-                'doconly' => 2,
-            ],
-            [
-                'permissions' => [Permission::update(Role::any()), Permission::delete(Role::any())],
-                'any' => 7,
-                'users' => 7,
-                'doconly' => 2,
-            ],
-            [
-                'permissions' => [Permission::read(Role::any()), Permission::update(Role::any()), Permission::delete(Role::any())],
-                'any' => 8,
-                'users' => 8,
-                'doconly' => 3,
-            ],
-            [
-                'permissions' => [Permission::read(Role::any()), Permission::update(Role::users()), Permission::delete(Role::users())],
-                'any' => 9,
-                'users' => 9,
-                'doconly' => 4,
-            ],
-            [
-                'permissions' => [Permission::read(Role::user(ID::custom('user1')))],
-                'any' => 10,
-                'users' => 10,
-                'doconly' => 5,
-            ],
-            [
-                'permissions' => [Permission::read(Role::user(ID::custom('user1'))), Permission::read(Role::user(ID::custom('user1')))],
-                'any' => 11,
-                'users' => 11,
-                'doconly' => 6,
-            ],
-            [
-                'permissions' => [Permission::read(Role::users()), Permission::update(Role::users()), Permission::delete(Role::users())],
-                'any' => 12,
-                'users' => 12,
-                'doconly' => 7,
-            ],
+            [[Permission::read(Role::any())], 1, 1, 1],
+            [[Permission::read(Role::users())], 2, 2, 2],
+            [[Permission::read(Role::user(ID::custom('random')))], 3, 3, 2],
+            [[Permission::read(Role::user(ID::custom('lorem'))), Permission::update(Role::user('lorem')), Permission::delete(Role::user('lorem'))], 4, 4, 2],
+            [[Permission::read(Role::user(ID::custom('dolor'))), Permission::update(Role::user('dolor')), Permission::delete(Role::user('dolor'))], 5, 5, 2],
+            [[Permission::read(Role::user(ID::custom('dolor'))), Permission::read(Role::user('lorem')), Permission::update(Role::user('dolor')), Permission::delete(Role::user('dolor'))], 6, 6, 2],
+            [[Permission::update(Role::any()), Permission::delete(Role::any())], 7, 7, 2],
+            [[Permission::read(Role::any()), Permission::update(Role::any()), Permission::delete(Role::any())], 8, 8, 3],
+            [[Permission::read(Role::any()), Permission::update(Role::users()), Permission::delete(Role::users())], 9, 9, 4],
+            [[Permission::read(Role::user(ID::custom('user1')))], 10, 10, 5],
+            [[Permission::read(Role::user(ID::custom('user1'))), Permission::read(Role::user(ID::custom('user1')))], 11, 11, 6],
+            [[Permission::read(Role::users()), Permission::update(Role::users()), Permission::delete(Role::users())], 12, 12, 7],
         ];
     }
 
@@ -172,10 +114,10 @@ class DatabasesPermissionsMemberTest extends Scope
     }
 
     /**
-     * Data provider params are passed before test dependencies
-     * @dataProvider permissionsProvider
-     * @depends      testSetupDatabase
+     * Data provider params are passed before test dependencies.
      */
+    #[DataProvider('permissionsProvider')]
+    #[Depends('testSetupDatabase')]
     public function testReadDocuments($permissions, $anyCount, $usersCount, $docOnlyCount, $data)
     {
         $users = $data['users'];

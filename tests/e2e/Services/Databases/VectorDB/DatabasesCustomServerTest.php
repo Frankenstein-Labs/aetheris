@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\E2E\Services\Databases\VectorDB;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\E2E\Client;
 use Tests\E2E\Scopes\ProjectCustom;
 use Tests\E2E\Scopes\Scope;
@@ -66,9 +67,7 @@ class DatabasesCustomServerTest extends Scope
         return ['databaseId' => $db1['body']['$id']];
     }
 
-    /**
-     * @depends testListDatabases
-     */
+    #[Depends('testListDatabases')]
     public function testGetDatabase(array $data): array
     {
         $databaseId = $data['databaseId'];
@@ -84,9 +83,7 @@ class DatabasesCustomServerTest extends Scope
         return ['databaseId' => $databaseId];
     }
 
-    /**
-     * @depends testListDatabases
-     */
+    #[Depends('testListDatabases')]
     public function testUpdateDatabase(array $data): array
     {
         $databaseId = $data['databaseId'];
@@ -103,9 +100,7 @@ class DatabasesCustomServerTest extends Scope
         return ['databaseId' => $databaseId];
     }
 
-    /**
-     * @depends testListDatabases
-     */
+    #[Depends('testListDatabases')]
     public function testDeleteDatabase(array $data): void
     {
         $databaseId = $data['databaseId'];
@@ -238,9 +233,7 @@ class DatabasesCustomServerTest extends Scope
         ];
     }
 
-    /**
-     * @depends testCollectionsCRUD
-     */
+    #[Depends('testCollectionsCRUD')]
     public function testUpdateCollectionMore(array $data): array
     {
         $databaseId = $data['databaseId'];
@@ -272,9 +265,7 @@ class DatabasesCustomServerTest extends Scope
         return $data;
     }
 
-    /**
-     * @depends testCollectionsCRUD
-     */
+    #[Depends('testCollectionsCRUD')]
     public function testUpdateCollectionEnabledFlag(array $data): array
     {
         $databaseId = $data['databaseId'];
@@ -364,9 +355,7 @@ class DatabasesCustomServerTest extends Scope
         $this->assertEquals(204, $del['headers']['status-code']);
     }
 
-    /**
-     * @depends testCollectionsCRUD
-     */
+    #[Depends('testCollectionsCRUD')]
     public function testRecreateIndex(array $data): void
     {
         $databaseId = $data['databaseId'];
@@ -402,9 +391,7 @@ class DatabasesCustomServerTest extends Scope
         $this->assertEquals(204, $del['headers']['status-code']);
     }
 
-    /**
-     * @depends testCollectionsCRUD
-     */
+    #[Depends('testCollectionsCRUD')]
     public function testIndexesCRUD(array $data): void
     {
         $databaseId = $data['databaseId'];

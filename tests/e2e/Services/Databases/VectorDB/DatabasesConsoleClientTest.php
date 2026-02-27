@@ -2,6 +2,7 @@
 
 namespace Tests\E2E\Services\Databases\VectorDB;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\E2E\Client;
 use Tests\E2E\Scopes\ProjectCustom;
 use Tests\E2E\Scopes\Scope;
@@ -99,11 +100,7 @@ class DatabasesConsoleClientTest extends Scope
         return ['moviesId' => $movies['body']['$id'], 'databaseId' => $databaseId, 'tvShowsId' => $tvShows['body']['$id']];
     }
 
-    /**
-     * @depends testCreateCollection
-     * @param array $data
-     * @throws \Exception
-     */
+    #[Depends('testCreateCollection')]
     public function testListCollection(array $data)
     {
         /**
@@ -120,11 +117,7 @@ class DatabasesConsoleClientTest extends Scope
         $this->assertEquals(2, $collections['body']['total']);
     }
 
-    /**
-     * @depends testCreateCollection
-     * @param array $data
-     * @throws \Exception
-     */
+    #[Depends('testCreateCollection')]
     public function testGetCollection(array $data)
     {
         $databaseId = $data['databaseId'];
@@ -144,12 +137,7 @@ class DatabasesConsoleClientTest extends Scope
         $this->assertFalse($collection['body']['enabled']);
     }
 
-    /**
-     * @depends testCreateCollection
-     * @param array $data
-     * @throws \Exception
-     * @throws \Exception
-     */
+    #[Depends('testCreateCollection')]
     public function testUpdateCollection(array $data)
     {
         $databaseId = $data['databaseId'];
@@ -172,12 +160,7 @@ class DatabasesConsoleClientTest extends Scope
         $this->assertFalse($collection['body']['enabled']);
     }
 
-    /**
-     * @depends testCreateCollection
-     * @param array $data
-     * @throws \Exception
-     * @throws \Exception
-     */
+    #[Depends('testCreateCollection')]
     public function testDeleteCollection(array $data)
     {
         $databaseId = $data['databaseId'];
@@ -195,9 +178,7 @@ class DatabasesConsoleClientTest extends Scope
         $this->assertEquals($response['body'], "");
     }
 
-    /**
-     * @depends testCreateCollection
-     */
+    #[Depends('testCreateCollection')]
     public function testGetDatabaseUsage(array $data)
     {
         $databaseId = $data['databaseId'];
@@ -235,9 +216,7 @@ class DatabasesConsoleClientTest extends Scope
     }
 
 
-    /**
-     * @depends testCreateCollection
-     */
+    #[Depends('testCreateCollection')]
     public function testGetCollectionUsage(array $data)
     {
         $databaseId = $data['databaseId'];
@@ -279,10 +258,7 @@ class DatabasesConsoleClientTest extends Scope
         $this->assertIsArray($response['body']['documents']);
     }
 
-    /**
-     * @depends testCreateCollection
-     * @throws \Utopia\Database\Exception\Query
-     */
+    #[Depends('testCreateCollection')]
     public function testGetCollectionLogs(array $data)
     {
         $databaseId = $data['databaseId'];

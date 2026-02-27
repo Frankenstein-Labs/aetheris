@@ -2,6 +2,7 @@
 
 namespace Tests\E2E\Services\Databases\VectorDB\Permissions;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\E2E\Client;
 use Tests\E2E\Scopes\ProjectCustom;
 use Tests\E2E\Scopes\Scope;
@@ -73,7 +74,7 @@ class DatabasesPermissionsGuestTest extends Scope
         ];
     }
 
-    public function permissionsProvider(): array
+    public static function permissionsProvider(): array
     {
         return [
             [[Permission::read(Role::any())]],
@@ -85,9 +86,7 @@ class DatabasesPermissionsGuestTest extends Scope
         ];
     }
 
-    /**
-     * @dataProvider permissionsProvider
-     */
+    #[DataProvider('permissionsProvider')]
     public function testReadDocuments($permissions)
     {
         $data = $this->createCollection();
