@@ -10,6 +10,7 @@ readonly class BuildResult
     public function __construct(
         public string $query,
         public array $bindings,
+        public bool $readOnly = false,
     ) {
     }
 }
