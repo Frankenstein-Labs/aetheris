@@ -27,6 +27,9 @@ abstract class Column extends Resource
     public const TYPE_LINE = 'linestring';
     public const TYPE_POLYGON = 'polygon';
 
+    public const TYPE_OBJECT = 'object';
+    public const TYPE_VECTOR = 'vector';
+
     /**
      * @param string $key
      * @param Table $table
@@ -156,5 +159,17 @@ abstract class Column extends Resource
     public function &getOptions(): array
     {
         return $this->options;
+    }
+
+    /**
+     * Convert this Column resource to an Attribute resource.
+     * This provides a deterministic way to derive attributes from columns,
+     * eliminating the need to maintain duplicate per-type Attribute implementations.
+     *
+     * @return Attribute
+     */
+    public function getAttribute(): Attribute
+    {
+        return Attribute::fromColumn($this);
     }
 }
