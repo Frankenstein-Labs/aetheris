@@ -61,10 +61,10 @@ class Create extends Base
                 ],
             ))
             ->param('webhokId', '', fn (Database $dbForPlatform) => new CustomId(false, $dbForPlatform->getAdapter()->getMaxUIDLength()), 'Webhook ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can\'t start with a special char. Max length is 36 chars.', false, ['$dbForPlatform'])
+            ->param('url', '', fn () => new Multiple([new URL(['http', 'https']), new PublicDomain()], Multiple::TYPE_STRING), 'Webhook URL.')
             ->param('name', null, new Text(128), 'Webhook name. Max length: 128 chars.')
             ->param('events', null, new ArrayList(new Event(), APP_LIMIT_ARRAY_PARAMS_SIZE), 'Events list. Maximum of ' . APP_LIMIT_ARRAY_PARAMS_SIZE . ' events are allowed.')
             ->param('enabled', true, new Boolean(), 'Enable or disable a webhook.', true)
-            ->param('url', '', fn () => new Multiple([new URL(['http', 'https']), new PublicDomain()], Multiple::TYPE_STRING), 'Webhook URL.', false)
             ->param('security', false, new Boolean(), 'Certificate verification, false for disabled or true for enabled.', true)
             ->param('httpUser', '', new Text(256), 'Webhook HTTP user. Max length: 256 chars.', true)
             ->param('httpPass', '', new Text(256), 'Webhook HTTP password. Max length: 256 chars.', true)
@@ -82,9 +82,9 @@ class Create extends Base
     public function action(
         string $webhookId,
         string $name,
+        string $url,
         array $events,
         bool $enabled,
-        string $url,
         bool $security,
         string $httpUser,
         string $httpPass,
@@ -94,8 +94,6 @@ class Create extends Base
         Database $dbForPlatform,
         Authorization $authorization
     ) {
-        $security = (bool) filter_var($security, FILTER_VALIDATE_BOOLEAN);
-
         $webhookId = ($webhookId == 'unique()') ? ID::unique() : $webhookId;
 
         $webhook = new Document([
@@ -116,7 +114,7 @@ class Create extends Base
         try {
             $webhook = $authorization->skip(fn () => $dbForPlatform->createDocument('webhooks', $webhook));
         } catch (DuplicateException) {
-            throw new Exception(Exception::SITE_ALREADY_EXISTS);
+            throw new Exception(Exception::WEBHOOK_ALREADY_EXISTS);
         }
 
         $authorization->skip(fn () => $dbForPlatform->purgeCachedDocument('projects', $project->getId()));
