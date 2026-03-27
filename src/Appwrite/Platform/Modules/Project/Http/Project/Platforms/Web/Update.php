@@ -4,8 +4,8 @@ namespace Appwrite\Platform\Modules\Project\Http\Project\Platforms\Web;
 
 use Appwrite\Event\Event as QueueEvent;
 use Appwrite\Extend\Exception;
+use Appwrite\Network\Platform;
 use Appwrite\Platform\Modules\Compute\Base;
-use Appwrite\Platform\Modules\Project\Http\Project\Platforms\Web\Create as WebPlatformCreate;
 use Appwrite\SDK\AuthType;
 use Appwrite\SDK\Method;
 use Appwrite\SDK\Response as SDKResponse;
@@ -81,8 +81,7 @@ class Update extends Base
             throw new Exception(Exception::PLATFORM_NOT_FOUND);
         }
 
-        $webPlatforms = WebPlatformCreate::getSupportedTypes();
-        if (!\in_array($platform->getAttribute('type', ''), $webPlatforms)) {
+        if ($platform->getAttribute('type', '') !== Platform::TYPE_WEB) {
             throw new Exception(Exception::PLATFORM_METHOD_UNSUPPORTED);
         }
 

@@ -20,7 +20,6 @@ use Utopia\Platform\Action;
 use Utopia\Platform\Scope\HTTP;
 use Utopia\Validator\Hostname;
 use Utopia\Validator\Text;
-use Utopia\Validator\WhiteList;
 
 class Create extends Base
 {
@@ -29,18 +28,6 @@ class Create extends Base
     public static function getName()
     {
         return 'createProjectWebPlatform';
-    }
-
-    /**
-     * @return array<string>
-     */
-    public static function getSupportedTypes(): array
-    {
-        return [
-            Platform::TYPE_WEB,
-            Platform::TYPE_FLUTTER_WEB,
-            Platform::TYPE_REACT_NATIVE_WEB
-        ];
     }
 
     public function __construct()
@@ -71,12 +58,6 @@ class Create extends Base
             ))
             ->param('platformId', '', fn (Database $dbForPlatform) => new CustomId(false, $dbForPlatform->getAdapter()->getMaxUIDLength()), 'Platform ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can\'t start with a special char. Max length is 36 chars.', false, ['dbForPlatform'])
             ->param('name', null, new Text(128), 'Platform name. Max length: 128 chars.')
-            ->param(
-                'type',
-                null,
-                new WhiteList($this->getSupportedTypes(), true),
-                'Platform type. Possible values are: ' . implode(', ', $this->getSupportedTypes())
-            )
             ->param('hostname', '', new Hostname(), 'Platform web hostname. Max length: 256 chars.')
             ->inject('response')
             ->inject('queueForEvents')
@@ -89,7 +70,6 @@ class Create extends Base
     public function action(
         string $platformId,
         string $name,
-        string $type,
         string $hostname,
         Response $response,
         QueueEvent $queueForEvents,
@@ -104,7 +84,7 @@ class Create extends Base
             '$permissions' => [],
             'projectInternalId' => $project->getSequence(),
             'projectId' => $project->getId(),
-            'type' => $type,
+            'type' => Platform::TYPE_WEB,
             'name' => $name,
             'key' => null, // App platform attribute
             'hostname' => $hostname
