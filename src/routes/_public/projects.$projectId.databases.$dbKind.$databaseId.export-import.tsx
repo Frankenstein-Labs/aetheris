@@ -6,6 +6,7 @@ import {
   tablesQueryOptions,
   databaseCsvMigrationsQueryOptions,
 } from '@/lib/react-query/hooks'
+import { listSearchSchema } from '@/lib/table-filters'
 import { pageTitle } from '@/lib/utils/page-title'
 
 const TABLES_PER_PAGE = 500
@@ -13,6 +14,7 @@ const TABLES_PER_PAGE = 500
 export const Route = createFileRoute(
   '/_public/projects/$projectId/databases/$dbKind/$databaseId/export-import',
 )({
+  validateSearch: listSearchSchema,
   head: ({ loaderData }) => ({
     meta: [
       {
