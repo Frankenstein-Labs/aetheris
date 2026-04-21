@@ -49,6 +49,7 @@ class Update extends Action
                     )
                 ],
             ))
+            // TODO: Split into more toggles, simiplar to membership privacy policy
             ->param('enabled', null, new Boolean(), 'Toggle password personal data policy. Set to true if you want to block passwords including user\'s personal data, or false to allow it. When changing this policy, existing passwords remain valid.')
             ->inject('response')
             ->inject('dbForPlatform')
