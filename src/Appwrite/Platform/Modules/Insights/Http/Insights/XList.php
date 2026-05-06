@@ -54,7 +54,8 @@ class XList extends Action
             ->param('queries', [], new Insights(), 'Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of ' . APP_LIMIT_ARRAY_PARAMS_SIZE . ' queries are allowed, each ' . APP_LIMIT_ARRAY_ELEMENT_SIZE . ' characters long. You may filter on the following attributes: ' . implode(', ', Insights::ALLOWED_ATTRIBUTES), true)
             ->param('total', true, new Boolean(true), 'When set to false, the total count returned will be 0 and will not be calculated.', true)
             ->inject('response')
-            ->inject('dbForProject')
+            ->inject('project')
+            ->inject('dbForPlatform')
             ->callback($this->action(...));
     }
 
@@ -62,13 +63,16 @@ class XList extends Action
         array $queries,
         bool $includeTotal,
         Response $response,
-        Database $dbForProject
+        Document $project,
+        Database $dbForPlatform
     ) {
         try {
             $queries = Query::parseQueries($queries);
         } catch (QueryException $e) {
             throw new Exception(Exception::GENERAL_QUERY_INVALID, $e->getMessage());
         }
+
+        $queries[] = Query::equal('projectInternalId', [$project->getSequence()]);
 
         $cursor = Query::getCursorQueries($queries, false);
         $cursor = \reset($cursor);
@@ -80,9 +84,9 @@ class XList extends Action
             }
 
             $insightId = $cursor->getValue();
-            $cursorDocument = $dbForProject->getDocument('insights', $insightId);
+            $cursorDocument = $dbForPlatform->getDocument('insights', $insightId);
 
-            if ($cursorDocument->isEmpty()) {
+            if ($cursorDocument->isEmpty() || $cursorDocument->getAttribute('projectInternalId') !== $project->getSequence()) {
                 throw new Exception(Exception::GENERAL_CURSOR_NOT_FOUND, "Insight '{$insightId}' for the 'cursor' value not found.");
             }
 
@@ -92,8 +96,8 @@ class XList extends Action
         $filterQueries = Query::groupByType($queries)['filters'];
 
         try {
-            $insights = $dbForProject->find('insights', $queries);
-            $total = $includeTotal ? $dbForProject->count('insights', $filterQueries, APP_LIMIT_COUNT) : 0;
+            $insights = $dbForPlatform->find('insights', $queries);
+            $total = $includeTotal ? $dbForPlatform->count('insights', $filterQueries, APP_LIMIT_COUNT) : 0;
         } catch (OrderException $e) {
             throw new Exception(Exception::DATABASE_QUERY_ORDER_NULL, "The order attribute '{$e->getAttribute()}' had a null value. Cursor pagination requires all documents order attribute values are non-null.");
         }

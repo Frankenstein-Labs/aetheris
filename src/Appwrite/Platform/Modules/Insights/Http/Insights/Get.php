@@ -8,6 +8,7 @@ use Appwrite\SDK\Method;
 use Appwrite\SDK\Response as SDKResponse;
 use Appwrite\Utopia\Response;
 use Utopia\Database\Database;
+use Utopia\Database\Document;
 use Utopia\Database\Validator\UID;
 use Utopia\Platform\Action;
 use Utopia\Platform\Scope\HTTP;
@@ -45,20 +46,22 @@ class Get extends Action
                     ),
                 ]
             ))
-            ->param('insightId', '', fn (Database $dbForProject) => new UID($dbForProject->getAdapter()->getMaxUIDLength()), 'Insight ID.', false, ['dbForProject'])
+            ->param('insightId', '', fn (Database $dbForPlatform) => new UID($dbForPlatform->getAdapter()->getMaxUIDLength()), 'Insight ID.', false, ['dbForPlatform'])
             ->inject('response')
-            ->inject('dbForProject')
+            ->inject('project')
+            ->inject('dbForPlatform')
             ->callback($this->action(...));
     }
 
     public function action(
         string $insightId,
         Response $response,
-        Database $dbForProject
+        Document $project,
+        Database $dbForPlatform
     ) {
-        $insight = $dbForProject->getDocument('insights', $insightId);
+        $insight = $dbForPlatform->getDocument('insights', $insightId);
 
-        if ($insight->isEmpty()) {
+        if ($insight->isEmpty() || $insight->getAttribute('projectInternalId') !== $project->getSequence()) {
             throw new Exception(Exception::INSIGHT_NOT_FOUND);
         }
 
