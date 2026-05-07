@@ -1,8 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { View } from '@/components/pages/projects/$projectId/messaging/$messageId/View'
-import { prefetchMessageDetailData } from '@/lib/react-query/hooks'
+import {
+  messageQueryOptions,
+  prefetchMessageDetailData,
+} from '@/lib/react-query/hooks'
 import type { Models } from '@appwrite.io/console'
-import { pageTitle } from '@/lib/utils/page-title'
+import { pageTitle, trimForPageTitle } from '@/lib/utils/page-title'
 
 export const Route = createFileRoute(
   '/_public/projects/$projectId/messaging/$messageId/',
@@ -24,26 +27,27 @@ export const Route = createFileRoute(
 
     if (projectId && messageId) {
       await prefetchMessageDetailData(queryClient, projectId, messageId)
-      const message = queryClient.getQueryData<Models.Message>([
-        'message',
-        'project',
-        projectId,
-        messageId,
-      ])
+      const message = queryClient.getQueryData<Models.Message>(
+        messageQueryOptions(projectId, messageId).queryKey,
+      )
       const messageTitle =
         message?.providerType === 'email' && message.data?.subject
-          ? String(message.data.subject)
+          ? trimForPageTitle(String(message.data.subject))
           : message?.providerType === 'sms' && message.data?.content
             ? String(message.data.content).slice(0, 80)
             : message?.providerType === 'push' && message.data?.title
               ? String(message.data.title)
               : undefined
-      return { messageTitle }
+      return { messageTitle, message }
     }
   },
   component: MessageDetailPage,
 })
 
 function MessageDetailPage() {
-  return <View />
+  const { messageId } = Route.useParams()
+  const data = Route.useLoaderData()
+  return (
+    <View key={`message-${messageId}`} initialMessage={data?.message} />
+  )
 }

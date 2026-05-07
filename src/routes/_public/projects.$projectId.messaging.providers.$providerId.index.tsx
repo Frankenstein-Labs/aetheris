@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { View } from '@/components/pages/projects/$projectId/messaging/providers/$providerId/View'
-import { fetchProvider } from '@/lib/react-query/hooks'
+import { providerQueryOptions } from '@/lib/react-query/hooks'
 import { pageTitle } from '@/lib/utils/page-title'
 
 export const Route = createFileRoute(
@@ -23,17 +23,12 @@ export const Route = createFileRoute(
     const { queryClient } = context
 
     if (projectId && providerId) {
-      await queryClient.ensureQueryData({
-        queryKey: ['provider', 'project', projectId, providerId],
-        queryFn: () => fetchProvider(projectId, providerId),
-        staleTime: 30 * 1000,
-      })
-      const provider = queryClient.getQueryData<{ name?: string }>([
-        'provider',
-        'project',
-        projectId,
-        providerId,
-      ])
+      await queryClient.ensureQueryData(
+        providerQueryOptions(projectId, providerId),
+      )
+      const provider = queryClient.getQueryData<{ name?: string }>(
+        providerQueryOptions(projectId, providerId).queryKey,
+      )
       return { provider }
     }
   },
