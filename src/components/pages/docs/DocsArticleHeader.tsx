@@ -6,6 +6,7 @@ import {
   DOCS_PAGE_DESCRIPTION_CLASS,
   DOCS_PAGE_EYEBROW_CLASS,
   DOCS_PAGE_TITLE_CLASS,
+  DOCS_STICKY_TITLE_CLASS,
 } from '@/lib/docs/prose-typography'
 import { DOCS_SECTION_HEADER_CLASS } from '@/lib/docs/nav-styles'
 import { cn, findScrollParent } from '@/lib/utils'
@@ -27,9 +28,6 @@ type StickyBounds = {
   contentInsetLeft: number
   contentWidth: number
 }
-
-const DOCS_STICKY_TITLE_CLASS =
-  'min-w-0 truncate font-aeonik-pro text-[15px] font-medium leading-tight text-foreground @[560px]:text-[17px]'
 
 export function DocsArticleHeader({
   title,
