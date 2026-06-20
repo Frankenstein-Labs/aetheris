@@ -35,4 +35,5 @@ export const Route = createFileRoute(
       projectAuthSecurityQueryOptions(projectId, project?.region),
     )
   },
+  component: () => null,
 })
