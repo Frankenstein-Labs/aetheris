@@ -30,8 +30,8 @@ class XList extends DocumentXList
     public function __construct()
     {
         $this
-            ->setHttpMethod(self::HTTP_REQUEST_METHOD_POST)
-            ->setHttpPath('/v1/vectorsdb/:databaseId/collections/:collectionId/documents/query')
+            ->setHttpMethod(self::HTTP_REQUEST_METHOD_GET)
+            ->setHttpPath('/v1/vectorsdb/:databaseId/collections/:collectionId/documents')
             ->desc('List documents')
             ->groups(['api', 'database'])
             ->label('scope', 'documents.read')
