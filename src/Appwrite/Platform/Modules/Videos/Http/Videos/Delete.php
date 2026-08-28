@@ -44,7 +44,7 @@ class Delete extends Base
             ->label('sdk', new Method(
                 namespace: 'videos',
                 group: 'videos',
-                name: 'deleteVideo',
+                name: 'delete',
                 description: '/docs/references/videos/delete-video.md',
                 auth: [AuthType::ADMIN, AuthType::SESSION, AuthType::KEY, AuthType::JWT],
                 responses: [
