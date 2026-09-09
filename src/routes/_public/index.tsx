@@ -4,7 +4,6 @@ import {
   isRedirect,
 } from '@tanstack/react-router'
 import { AppwriteException } from '@appwrite.io/console'
-import { Loader2 } from 'lucide-react'
 import { AccountAccessBlockedScreen } from '@/components/global/auth/AccountAccessBlockedScreen'
 import { useAuth } from '@/components/global/auth/RequireAuth'
 import { ConsoleImpersonationBanner } from '@/components/global/shared/ConsoleImpersonationBanner'
@@ -19,21 +18,27 @@ import { resolveAndPrefetchDefaultOrganization } from '@/lib/organization-overvi
 import { requiresConsoleEmailVerification } from '@/lib/post-auth-navigation'
 import { searchParamsFromRouterLocation } from '@/lib/table-filters'
 import { isHttpForbiddenError } from '@/lib/utils/error-formatting'
+import { NOINDEX_ROBOTS_META } from '@/lib/seo/indexing'
 import {
   consoleAccountQueryOptions,
   ensureConsoleAccountQueryData,
 } from '@/lib/react-query/hooks/auth'
 
 export const Route = createFileRoute('/_public/')({
+  // If HTML is ever served (localhost, or a session cookie), do not index `/`.
+  head: () => ({
+    meta: [NOINDEX_ROBOTS_META],
+  }),
   loader: async ({ context, location }) => {
     if (typeof window === 'undefined') return
 
     // No session signal: skip account.get and redirect immediately (in-app nav).
-    // Full-page guest visits are handled by rootGuestRedirectMiddleware (302).
+    // Full-page guest visits are handled by rootGuestRedirectMiddleware (301 to /home).
     if (!hasLikelyConsoleSession()) {
       throw redirect({
         to: resolveRootGuestRedirectPathname(),
         replace: true,
+        reloadDocument: true,
       })
     }
 
@@ -50,6 +55,7 @@ export const Route = createFileRoute('/_public/')({
         throw redirect({
           to: resolveRootGuestRedirectPathname(),
           replace: true,
+          reloadDocument: true,
         })
       }
       return
@@ -96,7 +102,7 @@ export const Route = createFileRoute('/_public/')({
 })
 
 function RootRedirect() {
-  const { accountAccessBlocked, isLoading, isMfaRequired } = useAuth()
+  const { accountAccessBlocked, isLoading } = useAuth()
 
   if (!isLoading && accountAccessBlocked) {
     return (
@@ -107,15 +113,8 @@ function RootRedirect() {
     )
   }
 
-  if (!isLoading && isMfaRequired) {
-    return (
-      <div className="flex min-h-svh items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    )
-  }
-
   // Authenticated users are redirected from the loader after org data is prefetched.
-  // Blank screen while the loader runs; root fullscreen loader covers this route.
-  return <div className="fixed inset-0 bg-background" aria-hidden />
+  // Production guests never reach this component (SSR 301). Localhost cannot
+  // read the session cookie on the server, so keep this outlet empty.
+  return null
 }
