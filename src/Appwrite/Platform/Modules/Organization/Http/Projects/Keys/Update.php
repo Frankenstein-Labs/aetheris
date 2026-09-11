@@ -37,8 +37,6 @@ class Update extends Action
         $this
             ->setHttpMethod(Action::HTTP_REQUEST_METHOD_PUT)
             ->setHttpPath('/v1/organization/projects/:projectId/keys/:keyId')
-            ->httpAlias('/v1/project/keys/:keyId')
-            ->httpAlias('/v1/projects/:projectId/keys/:keyId')
             ->desc('Update project key')
             ->groups(['api', 'organization'])
             ->label('scope', 'keys.write')
@@ -60,7 +58,7 @@ class Update extends Action
                     )
                 ]
             ))
-            ->param('projectId', fn (Document $project) => $project->getId(), new UID(), 'Project unique ID.', true, ['project'])
+            ->param('projectId', '', new UID(), 'Project unique ID.')
             ->param('keyId', '', fn (Database $dbForPlatform) => new UID($dbForPlatform->getAdapter()->getMaxUIDLength()), 'Key ID.', false, ['dbForPlatform'])
             ->param('name', null, new Text(128), 'Key name. Max length: 128 chars.')
             ->param('scopes', [], new ArrayList(new WhiteList(array_keys(Config::getParam('projectScopes')), true), APP_LIMIT_ARRAY_SCOPES_SIZE), 'Key scopes list. Maximum of ' . APP_LIMIT_ARRAY_SCOPES_SIZE . ' scopes are allowed.', optional: false, enum: new Enum(name: 'ProjectKeyScopes'))

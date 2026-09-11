@@ -37,8 +37,6 @@ class Create extends Action
         $this
             ->setHttpMethod(Action::HTTP_REQUEST_METHOD_POST)
             ->setHttpPath('/v1/organization/projects/:projectId/keys/ephemeral')
-            ->httpAlias('/v1/project/keys/ephemeral')
-            ->httpAlias('/v1/projects/:projectId/jwts')
             ->desc('Create ephemeral project key')
             ->groups(['api', 'organization'])
             ->label('scope', 'keys.write')
@@ -62,7 +60,7 @@ class Create extends Action
                     )
                 ],
             ))
-            ->param('projectId', fn (Document $project) => $project->getId(), new UID(), 'Project unique ID.', true, ['project'])
+            ->param('projectId', '', new UID(), 'Project unique ID.')
             ->param('scopes', [], new ArrayList(new WhiteList(array_keys(Config::getParam('projectScopes')), true), APP_LIMIT_ARRAY_SCOPES_SIZE), 'Key scopes list. Maximum of ' . APP_LIMIT_ARRAY_SCOPES_SIZE . ' scopes are allowed.', optional: false, enum: new Enum(name: 'ProjectKeyScopes'))
             ->param('duration', null, new Range(1, 3600), 'Time in seconds before ephemeral key expires. Maximum duration is 3600 seconds.', optional: false, example: 600)
             ->inject('response')

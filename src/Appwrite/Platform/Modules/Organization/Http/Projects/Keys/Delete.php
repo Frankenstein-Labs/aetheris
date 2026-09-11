@@ -30,8 +30,6 @@ class Delete extends Action
         $this
             ->setHttpMethod(Action::HTTP_REQUEST_METHOD_DELETE)
             ->setHttpPath('/v1/organization/projects/:projectId/keys/:keyId')
-            ->httpAlias('/v1/project/keys/:keyId')
-            ->httpAlias('/v1/projects/:projectId/keys/:keyId')
             ->desc('Delete project key')
             ->groups(['api', 'organization'])
             ->label('scope', 'keys.write')
@@ -54,7 +52,7 @@ class Delete extends Action
                 ],
                 contentType: ContentType::NONE
             ))
-            ->param('projectId', fn (Document $project) => $project->getId(), new UID(), 'Project unique ID.', true, ['project'])
+            ->param('projectId', '', new UID(), 'Project unique ID.')
             ->param('keyId', '', fn (Database $dbForPlatform) => new UID($dbForPlatform->getAdapter()->getMaxUIDLength()), 'Key ID.', false, ['dbForPlatform'])
             ->inject('response')
             ->inject('dbForPlatform')

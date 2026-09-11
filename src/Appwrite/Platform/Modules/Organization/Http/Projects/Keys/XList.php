@@ -34,8 +34,6 @@ class XList extends Action
         $this
             ->setHttpMethod(Action::HTTP_REQUEST_METHOD_GET)
             ->setHttpPath('/v1/organization/projects/:projectId/keys')
-            ->httpAlias('/v1/project/keys')
-            ->httpAlias('/v1/projects/:projectId/keys')
             ->desc('List project keys')
             ->groups(['api', 'organization'])
             ->label('scope', 'keys.read')
@@ -54,7 +52,7 @@ class XList extends Action
                     )
                 ]
             ))
-            ->param('projectId', fn (Document $project) => $project->getId(), new UID(), 'Project unique ID.', true, ['project'])
+            ->param('projectId', '', new UID(), 'Project unique ID.')
             ->param('queries', [], new Keys(), 'Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of ' . APP_LIMIT_ARRAY_PARAMS_SIZE . ' queries are allowed, each ' . APP_LIMIT_ARRAY_ELEMENT_SIZE . ' characters long. You may filter on the following attributes: ' . implode(', ', Keys::ALLOWED_ATTRIBUTES), true)
             ->param('total', true, new Boolean(true), 'When set to false, the total count returned will be 0 and will not be calculated.', true)
             ->inject('response')

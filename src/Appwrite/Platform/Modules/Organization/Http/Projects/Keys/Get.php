@@ -28,8 +28,6 @@ class Get extends Action
         $this
             ->setHttpMethod(Action::HTTP_REQUEST_METHOD_GET)
             ->setHttpPath('/v1/organization/projects/:projectId/keys/:keyId')
-            ->httpAlias('/v1/project/keys/:keyId')
-            ->httpAlias('/v1/projects/:projectId/keys/:keyId')
             ->desc('Get project key')
             ->groups(['api', 'organization'])
             ->label('scope', 'keys.read')
@@ -48,7 +46,7 @@ class Get extends Action
                     )
                 ]
             ))
-            ->param('projectId', fn (Document $project) => $project->getId(), new UID(), 'Project unique ID.', true, ['project'])
+            ->param('projectId', '', new UID(), 'Project unique ID.')
             ->param('keyId', '', fn (Database $dbForPlatform) => new UID($dbForPlatform->getAdapter()->getMaxUIDLength()), 'Key ID.', false, ['dbForPlatform'])
             ->inject('response')
             ->inject('dbForPlatform')
