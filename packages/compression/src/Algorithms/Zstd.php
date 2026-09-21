@@ -4,17 +4,18 @@ namespace Utopia\Compression\Algorithms;
 
 use Utopia\Compression\Compression;
 
-class LZ4 extends Compression
+class Zstd extends Compression
 {
     public function __construct(
         /**
-         * Compression level from 0 up to a current max of 12.
-         * Recommended values are between 4 and 9.
+         * Compression level from 1 up to a current max of 22.
+         * Levels >= 20 should be used with caution, as they require more memory.
          *
-         * Default value is 0, Not high compression mode.
+         * Default value is 3.
          */
-        protected int $level = 0,
-    ) {}
+        protected int $level = 3,
+    ) {
+    }
 
     /**
      * Get the compression level.
@@ -27,12 +28,12 @@ class LZ4 extends Compression
     /**
      * Set the compression level.
      *
-     * Allow values from 0 up to a current max of 12.
+     * Allow values from 1 up to a current max of 22.
      */
     public function setLevel(int $level): void
     {
-        if ($level < 0 || $level > 12) {
-            throw new \InvalidArgumentException('Level must be between 0 and 12');
+        if ($level < 1 || $level > 22) {
+            throw new \InvalidArgumentException('Level must be between 1 and 22');
         }
         $this->level = $level;
     }
@@ -42,7 +43,7 @@ class LZ4 extends Compression
      */
     public function getName(): string
     {
-        return Compression::LZ4;
+        return Compression::ZSTD;
     }
 
     /**
@@ -50,7 +51,7 @@ class LZ4 extends Compression
      */
     public function compress(string $data): string
     {
-        return lz4_compress($data, $this->level);
+        return zstd_compress($data, $this->level);
     }
 
     /**
@@ -58,7 +59,7 @@ class LZ4 extends Compression
      */
     public function decompress(string $data): string
     {
-        return lz4_uncompress($data);
+        return zstd_uncompress($data);
     }
 
     /**
@@ -66,6 +67,6 @@ class LZ4 extends Compression
      */
     public static function isSupported(): bool
     {
-        return \function_exists('lz4_compress');
+        return \function_exists('zstd_compress');
     }
 }

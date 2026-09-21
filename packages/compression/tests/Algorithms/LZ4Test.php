@@ -2,27 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Utopia\Tests\Compression\Algorithms;
+namespace Utopia\Compression\Tests\Algorithms;
 
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
-use Utopia\Compression\Algorithms\XZ;
+use Utopia\Compression\Algorithms\LZ4;
 
-#[RequiresPhpExtension('xz')]
-final class XZTest extends TestCase
+#[RequiresPhpExtension('lz4')]
+final class LZ4Test extends TestCase
 {
-    protected XZ $object;
+    protected LZ4 $object;
 
     public function setUp(): void
     {
-        $this->object = new XZ();
+        $this->object = new LZ4();
     }
-
-    public function tearDown(): void {}
 
     public function testName(): void
     {
-        $this->assertSame('xz', $this->object->getName());
+        $this->assertSame('lz4', $this->object->getName());
     }
 
     public function testCompressDecompressWithText(): void
@@ -31,23 +29,26 @@ final class XZTest extends TestCase
         $demoSize = mb_strlen($demo, '8bit');
 
         $data = $this->object->compress($demo);
+        $dataSize = mb_strlen($data, '8bit');
 
         $this->assertSame(21, $demoSize);
+        $this->assertSame(27, $dataSize);
 
-        $this->assertSame($this->object->decompress($data), $demo);
+        $this->assertSame($demo, $this->object->decompress($data));
     }
 
     public function testCompressDecompressWithJPGImage(): void
     {
-        $demo = file_get_contents(__DIR__ . '/../../resources/disk-a/kitten-1.jpg');
+        $demo = file_get_contents(__DIR__ . '/../resources/disk-a/kitten-1.jpg');
         $demoSize = mb_strlen($demo, '8bit');
 
         $data = $this->object->compress($demo);
         $dataSize = mb_strlen($data, '8bit');
 
         $this->assertSame(599639, $demoSize);
+        $this->assertSame(601828, $dataSize);
 
-        $this->assertGreaterThan($dataSize, $demoSize);
+        $this->assertGreaterThan($demoSize, $dataSize);
 
         $data = $this->object->decompress($data);
         $dataSize = mb_strlen($data, '8bit');
@@ -57,15 +58,16 @@ final class XZTest extends TestCase
 
     public function testCompressDecompressWithPNGImage(): void
     {
-        $demo = file_get_contents(__DIR__ . '/../../resources/disk-b/kitten-1.png');
+        $demo = file_get_contents(__DIR__ . '/../resources/disk-b/kitten-1.png');
         $demoSize = mb_strlen($demo, '8bit');
 
         $data = $this->object->compress($demo);
         $dataSize = mb_strlen($data, '8bit');
 
         $this->assertSame(3038056, $demoSize);
+        $this->assertSame(3049975, $dataSize);
 
-        $this->assertGreaterThan($dataSize, $demoSize);
+        $this->assertGreaterThan($demoSize, $dataSize);
 
         $data = $this->object->decompress($data);
         $dataSize = mb_strlen($data, '8bit');

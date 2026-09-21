@@ -129,13 +129,13 @@ abstract class Compression
             ];
         }, $encodings);
 
-        $encodings = array_filter($encodings, fn(array $encoding): bool => isset($supported[$encoding['encoding']]) && $supported[$encoding['encoding']]);
+        $encodings = array_filter($encodings, fn (array $encoding): bool => isset($supported[$encoding['encoding']]) && $supported[$encoding['encoding']]);
 
         if ($encodings === []) {
             return null;
         }
 
-        usort($encodings, fn(array $a, array $b): int => $b['quality'] <=> $a['quality']);
+        usort($encodings, fn (array $a, array $b): int => $b['quality'] <=> $a['quality']);
 
         return self::fromName($encodings[0]['encoding']);
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Utopia\Tests\Compression\Algorithms;
+namespace Utopia\Compression\Tests\Algorithms;
 
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
@@ -20,8 +20,6 @@ final class GZIPTest extends TestCase
     {
         $this->object = new GZIP();
     }
-
-    public function tearDown(): void {}
 
     public function testName(): void
     {
@@ -42,7 +40,7 @@ final class GZIPTest extends TestCase
 
     public function testCompressDecompressWithLargeText(): void
     {
-        $demo = file_get_contents(__DIR__ . '/../../resources/disk-a/lorem.txt');
+        $demo = file_get_contents(__DIR__ . '/../resources/disk-a/lorem.txt');
         $demoSize = mb_strlen($demo, '8bit');
 
         $data = $this->object->compress($demo);
@@ -60,7 +58,7 @@ final class GZIPTest extends TestCase
 
     public function testCompressDecompressWithJPGImage(): void
     {
-        $demo = file_get_contents(__DIR__ . '/../../resources/disk-a/kitten-1.jpg');
+        $demo = file_get_contents(__DIR__ . '/../resources/disk-a/kitten-1.jpg');
         $demoSize = mb_strlen($demo, '8bit');
 
         $data = $this->object->compress($demo);
@@ -78,7 +76,7 @@ final class GZIPTest extends TestCase
 
     public function testCompressDecompressWithPNGImage(): void
     {
-        $demo = file_get_contents(__DIR__ . '/../../resources/disk-b/kitten-1.png');
+        $demo = file_get_contents(__DIR__ . '/../resources/disk-b/kitten-1.png');
         $demoSize = mb_strlen($demo, '8bit');
 
         $data = $this->object->compress($demo);

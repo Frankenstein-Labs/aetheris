@@ -2,27 +2,35 @@
 
 declare(strict_types=1);
 
-namespace Utopia\Tests\Compression\Algorithms;
+namespace Utopia\Compression\Tests\Algorithms;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
-use Utopia\Compression\Algorithms\Zstd;
+use Utopia\Compression\Algorithms\Brotli;
 
-#[RequiresPhpExtension('zstd')]
-final class ZstdTest extends TestCase
+#[RequiresPhpExtension('brotli')]
+final class BrotliTest extends TestCase
 {
-    protected Zstd $object;
+    /**
+     * @var Brotli
+     */
+    protected $object;
 
     public function setUp(): void
     {
-        $this->object = new Zstd();
+        $this->object = new Brotli();
     }
-
-    public function tearDown(): void {}
 
     public function testName(): void
     {
-        $this->assertSame('zstd', $this->object->getName());
+        $this->assertEquals('brotli', $this->object->getName());
+    }
+
+    public function testErrorsWhenSettingLevel(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->object->setLevel(-1);
     }
 
     public function testCompressDecompressWithText(): void
@@ -31,19 +39,18 @@ final class ZstdTest extends TestCase
         $demoSize = mb_strlen($demo, '8bit');
 
         $data = $this->object->compress($demo);
-        $dataSize = mb_strlen($data, '8bit');
 
         $this->assertSame(21, $demoSize);
-        $this->assertSame(30, $dataSize);
 
-        $this->assertSame($demo, $this->object->decompress($data));
+        $this->assertEquals($this->object->decompress($data), $demo);
     }
 
     public function testCompressDecompressWithLargeText(): void
     {
-        $demo = file_get_contents(__DIR__ . '/../../resources/disk-a/lorem.txt');
+        $demo = file_get_contents(__DIR__ . '/../resources/disk-a/lorem.txt');
         $demoSize = mb_strlen($demo, '8bit');
 
+        $this->object->setLevel(8);
         $data = $this->object->compress($demo);
         $dataSize = mb_strlen($data, '8bit');
 
@@ -55,20 +62,20 @@ final class ZstdTest extends TestCase
         $dataSize = mb_strlen($data, '8bit');
 
         $this->assertSame(386795, $dataSize);
+        $this->assertEquals($data, $demo);
     }
 
     public function testCompressDecompressWithJPGImage(): void
     {
-        $demo = file_get_contents(__DIR__ . '/../../resources/disk-a/kitten-1.jpg');
+        $demo = file_get_contents(__DIR__ . '/../resources/disk-a/kitten-1.jpg');
         $demoSize = mb_strlen($demo, '8bit');
 
+        $this->object->setLevel(8);
         $data = $this->object->compress($demo);
         $dataSize = mb_strlen($data, '8bit');
 
         $this->assertSame(599639, $demoSize);
-        $this->assertSame(599663, $dataSize);
-
-        $this->assertGreaterThan($demoSize, $dataSize);
+        // brotli is not the best for images
 
         $data = $this->object->decompress($data);
         $dataSize = mb_strlen($data, '8bit');
@@ -78,16 +85,15 @@ final class ZstdTest extends TestCase
 
     public function testCompressDecompressWithPNGImage(): void
     {
-        $demo = file_get_contents(__DIR__ . '/../../resources/disk-b/kitten-1.png');
+        $demo = file_get_contents(__DIR__ . '/../resources/disk-b/kitten-1.png');
         $demoSize = mb_strlen($demo, '8bit');
 
+        $this->object->setLevel(8);
         $data = $this->object->compress($demo);
         $dataSize = mb_strlen($data, '8bit');
 
         $this->assertSame(3038056, $demoSize);
-        $this->assertSame(3038138, $dataSize);
-
-        $this->assertGreaterThan($demoSize, $dataSize);
+        // brotli is not the best for images
 
         $data = $this->object->decompress($data);
         $dataSize = mb_strlen($data, '8bit');
