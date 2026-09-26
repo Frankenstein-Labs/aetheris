@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Utopia\Console;
 
-include __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/autoload.php';
 
 Console::loop(function (): void {
     echo "Hello\n";
