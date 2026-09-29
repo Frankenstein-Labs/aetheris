@@ -30,7 +30,7 @@ class Delete extends Action
             ->setHttpMethod(Action::HTTP_REQUEST_METHOD_DELETE)
             ->setHttpPath('/v1/account/passkeys/:passkeyId')
             ->desc('Delete passkey')
-            ->groups(['api', 'account'])
+            ->groups(['api', 'account', 'recentSession'])
             ->label('scope', 'account')
             ->label('audits.event', 'passkey.delete')
             ->label('audits.resource', 'user/{user.$id}')
@@ -39,7 +39,7 @@ class Delete extends Action
                 group: 'passkeys',
                 name: 'deletePasskey',
                 description: <<<EOT
-                Delete a passkey from the currently logged in user. The passkey can no longer be used to sign in, although it may remain stored on the user's device.
+                Delete a passkey from the currently logged in user. The passkey can no longer be used to sign in, although it may remain stored on the user's device. The session must have signed in or completed an MFA challenge within the last 10 minutes.
                 EOT,
                 auth: [AuthType::SESSION, AuthType::JWT],
                 responses: [
