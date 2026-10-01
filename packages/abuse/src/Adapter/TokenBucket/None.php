@@ -7,15 +7,15 @@ use Utopia\Abuse\Adapter\TokenBucket;
 final readonly class None extends TokenBucket
 {
     #[\Override]
-    protected function hit(string $key, float $now): int
+    protected function hit(string $key, float $now): float
     {
-        return 0;
+        return $this->tokens;
     }
 
     #[\Override]
-    protected function count(string $key, float $now): int
+    protected function count(string $key, float $now): float
     {
-        return 0;
+        return $this->tokens;
     }
 
     #[\Override]
