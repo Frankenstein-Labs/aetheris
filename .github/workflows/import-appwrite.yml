@@ -1,0 +1,51 @@
+name: Import Appwrite source history into Aetheris
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/import-appwrite.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  import-appwrite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Import full Appwrite history while preserving Aetheris workflow access
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          git clone --single-branch --branch main --no-tags https://github.com/appwrite/appwrite.git /tmp/appwrite
+          cd /tmp/appwrite
+
+          curl -fsSL https://raw.githubusercontent.com/newren/git-filter-repo/main/git-filter-repo -o /usr/local/bin/git-filter-repo
+          chmod +x /usr/local/bin/git-filter-repo
+
+          git filter-repo --force --path-glob '.github/workflows/*.yml' --path-glob '.github/workflows/*.yaml' --invert-paths
+          FILTERED_HEAD="$(git rev-parse HEAD)"
+
+          git config user.name "Frankenstein-Labs"
+          git config user.email "noreply@github.com"
+
+          git remote add aetheris "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch aetheris main
+          TARGET_HEAD="$(git rev-parse refs/remotes/aetheris/main)"
+
+          git read-tree "$FILTERED_HEAD"
+          mkdir -p .github/workflows
+          git show "$TARGET_HEAD:.github/workflows/import-appwrite.yml" > .github/workflows/import-appwrite.yml
+          git add .github/workflows/import-appwrite.yml
+
+          TREE="$(git write-tree)"
+          IMPORT_COMMIT="$(printf '%s\n' 'Import Appwrite source and preserve its filtered Git history' | git commit-tree "$TREE" -p "$TARGET_HEAD" -p "$FILTERED_HEAD")"
+
+          echo "Original Appwrite commit: 9c90250ec7514cf3d72f239960c5652a35b5b99e"
+          echo "Filtered Appwrite history head: $FILTERED_HEAD"
+          echo "Aetheris import merge commit: $IMPORT_COMMIT"
+          git push aetheris "$IMPORT_COMMIT:refs/heads/main"
