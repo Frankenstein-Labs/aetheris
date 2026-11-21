@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
-      - name: Import full Appwrite history while preserving Aetheris workflow access
+      - name: Import Appwrite history while preserving the existing workflow
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -27,7 +27,9 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/newren/git-filter-repo/main/git-filter-repo -o /usr/local/bin/git-filter-repo
           chmod +x /usr/local/bin/git-filter-repo
 
-          git filter-repo --force --path-glob '.github/workflows/*.yml' --path-glob '.github/workflows/*.yaml' --invert-paths
+          # GitHub's workflow permission applies to every file in this directory,
+          # including helper scripts. Remove the full folder from the initial push.
+          git filter-repo --force --path .github/workflows --invert-paths
           FILTERED_HEAD="$(git rev-parse HEAD)"
 
           git config user.name "Frankenstein-Labs"
